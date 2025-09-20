@@ -102,11 +102,11 @@ Durante el EDA se identificaron valores nulos en las columnas `IMDB_Rating`, `Re
 ---
 
 ## 5. Imputación final de Nulos
-- `Genre`: valores nulos completados con la API o mantenidos como `NaN` si no se encontraron.Se convirtieron desùés en "Unknown".
+- `Genre`: valores nulos completados con la API o mantenidos como `NaN` si no se encontraron. Se convirtieron después en "Unknown".
 
 - `Revenue`: imputación por mediana según la relación con Budget (ratio). 
 
-Se comparó la relación antes y después de la imputación de nulos para comrpobar que nose distorsionaba.
+Se comparó la relación antes y después de la imputación de nulos para comprobar que no se distorsionaba.
 |  |  |
 | -------------- | --------------- |
 |![Scatterplot Null](images/null_scatter_budget_revenue.png)| ![Scatterplot No Null](images/null_scatter_budget_revenue.png)|
@@ -120,9 +120,9 @@ Se comparó la relación antes y después de la imputación de nulos para comrpo
 
 ---
 
-## 6. Visualizaciones finales
+## 6. Visualizaciones finales (pendiente)
 
-## 7. Conclusiones
+## 7. Conclusiones (pendiente)
 - Existe una relación positiva entre Budget y Revenue.  
 - La limpieza y transformación de Year, Budget y Revenue permitió un análisis más confiable.  
 - La consulta a OMDb completó información faltante de IMDB_Rating y Genre, dejando el dataset listo para análisis futuros o visualizaciones más avanzadas.  
@@ -131,7 +131,7 @@ Se comparó la relación antes y después de la imputación de nulos para comrpo
 
 ## 8. Cómo ejecutar el proyecto
 1. Clonar el repositorio  
-2. Instalar dependencias: `pip install -r requirements.txt`  
+2. Instalar dependencias: `pip install -r requirements.txt`
 3. Ejecutar notebooks en el orden:
    - `01_EDA.ipynb`  
    - `02_Limpieza_y_Nulos.ipynb`  
