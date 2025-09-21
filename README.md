@@ -44,6 +44,7 @@ Se realizó un análisis preliminar con la función `carga_eda()`para entender l
 
 ### Visualizaciones exploratorias realizadas previa limpieza:
 - **Distribución de películas por año**: algunos valores estaban en formato string (por ejemplo, "Two Thousand"). Se decidió convertir a fecha y extraer solo el año para un análisis correcto.
+- **El año con mayor cantidad de películas es 2020** 
 
 ![Distribución por año ](images/histplot_years.png)
 
