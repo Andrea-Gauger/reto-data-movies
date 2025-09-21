@@ -49,10 +49,10 @@ Se realizó un análisis preliminar con la función `carga_eda()`para entender l
 |---------|---------|
 | ![Distribución por año](images/histplot_years.png) | Algunos valores estaban en formato string ("Two Thousand") y se convirtieron a años. El año con más películas es **2020**. |
 | ![Scatter Budget vs Revenue](images/scatter_budget_revenue.png) | Los valores de Budget estaban desordenados y en formatos mixtos. Se planificó normalizar unidades (miles, millones) para analizar la relación. |
-| ![Boxplot Budget](images/boxplot_budget.png) | Se detectan **outliers** en Budget que podrían influir en el análisis. |
+| ![Boxplot Budget](images/boxplot_budget.png) | Se detectan valores en formato mixto ("80M") que hay que limpiar. |
 | ![Boxplot Revenue](images/boxplot_revenue.png) | Se detectan **outliers** en Revenue, indicando valores atípicos relevantes. |
 | ![Histplot Rating](images/histplot_ratings.png) | Se observa la distribución de IMDB_Rating. La mayoría de películas se concentran en valores medios, con pocas películas con valoraciones extremas. |
-| ![Scatterplot Rating/Revenue](images/scatter_rating_revenue.png) | No se observa una relación clara entre IMDB_Rating y Revenue; tener buena valoración no garantiza altos ingresos. |
+| ![Scatterplot Rating/Revenue](images/scatter_rating_revenue.png) | No se observa una relación clara entre IMDB_Rating y Revenue; se volverá a comprobar una vez los datos estén limpios. |
 
 
 ## 4. Duplicados, Limpieza y Transformaciones
@@ -96,7 +96,7 @@ Se identificaron valores nulos en las columnas: `IMDB_Rating`, `Revenue` y `Genr
 
 | Columna | Estrategia de imputación | Visualización |
 |---------|--------------------------|---------------|
-| **Genre** | Valores nulos completados con la API o mantenidos como `NaN` si no se encontraron, luego se etiquetan como `"Unknown"` | |
+| **Genre** | Valores nulos completados con la API o mantenidos como `NaN` si no se encontraron, luego se etiquetan como `"Unknown"` | ![alt text](images/barplot_rating_genre.png) <br> ![alt text](reports/media_rating_per_genre.png)|
 | **Revenue** | Imputación por mediana usando la relación con Budget (`ratio`) | ![Scatterplot Nulos](images/null_scatter_budget_revenue.png) <br> ![Scatterplot Sin Nulos](images/no_null_scatter_budget_revenue.png) |
 | **IMDB_Rating** | Imputación por mediana global (en datasets grandes se recomienda por género) | ![Histplot Nulos](images/histplot_rating.png) <br> ![Histplot Sin Nulos](images/no_null_histplot_rating.png) |
 
@@ -118,6 +118,8 @@ A continuación se muestran los principales insights obtenidos tras el análisis
 |  |  |
 | -------------- | --------------- |
 |![Relación Año-Budget](reports/relacion_año_budget.png)|![Relación Año-Revenue](reports/relacion_año_revenue.png)|
+
+![alt text](reports/relacion_budget_revenue.png)
 
 ---
 
@@ -167,7 +169,8 @@ A continuación se muestran los principales insights obtenidos tras el análisis
 1. Clonar el repositorio  
 2. Instalar dependencias: `pip install -r requirements.txt`
 3. Ejecutar notebooks en el orden:
-   - `01_EDA.ipynb`  
-   - `02_Limpieza_y_Nulos.ipynb`  
+   - `01_eda.ipynb`  
+   - `02_limpieza_y_nulos.ipynb`  
+   - `03_visualizaciones_y_conclusiones.ipynb`
 
 > Las imágenes generadas se guardan en la carpeta `./images/`.
