@@ -47,12 +47,12 @@ Se realizó un análisis preliminar con la función `carga_eda()`para entender l
 
 | Gráfico | Insight |
 |---------|---------|
-| ![Distribución por año](images/histplot_years.png) | Algunos valores estaban en formato string ("Two Thousand") y se convirtieron a años. El año con más películas es **2020**. |
-| ![Scatter Budget vs Revenue](images/scatter_budget_revenue.png) | Los valores de Budget estaban desordenados y en formatos mixtos. Se planificó normalizar unidades (miles, millones) para analizar la relación. |
-| ![Boxplot Budget](images/boxplot_budget.png) | Se detectan valores en formato mixto ("80M") que hay que limpiar. |
-| ![Boxplot Revenue](images/boxplot_revenue.png) | Se detectan **outliers** en Revenue, indicando valores atípicos relevantes. |
-| ![Histplot Rating](images/histplot_ratings.png) | Se observa la distribución de IMDB_Rating. La mayoría de películas se concentran en valores medios, con pocas películas con valoraciones extremas. |
-| ![Scatterplot Rating/Revenue](images/scatter_rating_revenue.png) | No se observa una relación clara entre IMDB_Rating y Revenue; se volverá a comprobar una vez los datos estén limpios. |
+| ![Distribución por año](images/histplot_years1.png) | Algunos valores estaban en formato string ("Two Thousand") y se convirtieron a años. El año con más películas es **2020**. |
+| ![Scatter Budget vs Revenue](images/scatter_budget_revenue1.png) | Los valores de Budget estaban desordenados y en formatos mixtos. Se planificó normalizar unidades (miles, millones) para analizar la relación. |
+| ![Boxplot Budget](images/boxplot_budget1.png) | Se detectan valores en formato mixto ("80M") que hay que limpiar. |
+| ![Boxplot Revenue](images/boxplot_revenue1.png) | Se detectan **outliers** en Revenue, indicando valores atípicos relevantes. |
+| ![Histplot Rating](images/histplot_ratings1.png) | Se observa la distribución de IMDB_Rating. La mayoría de películas se concentran en valores medios, con pocas películas con valoraciones extremas. |
+| ![Scatterplot Rating/Revenue](images/scatter_rating_revenue1.png) | No se observa una relación clara entre IMDB_Rating y Revenue; se volverá a comprobar una vez los datos estén limpios. |
 
 
 ## 4. Duplicados, Limpieza y Transformaciones
@@ -96,9 +96,9 @@ Se identificaron valores nulos en las columnas: `IMDB_Rating`, `Revenue` y `Genr
 
 | Columna | Estrategia de imputación | Visualización |
 |---------|--------------------------|---------------|
-| **Genre** | Valores nulos completados con la API o mantenidos como `NaN` si no se encontraron, luego se etiquetan como `"Unknown"` | ![alt text](images/barplot_rating_genre.png) <br> ![alt text](reports/media_rating_per_genre.png)|
-| **Revenue** | Imputación por mediana usando la relación con Budget (`ratio`) | ![Scatterplot Nulos](images/null_scatter_budget_revenue.png) <br> ![Scatterplot Sin Nulos](images/no_null_scatter_budget_revenue.png) |
-| **IMDB_Rating** | Imputación por mediana global (en datasets grandes se recomienda por género) | ![Histplot Nulos](images/histplot_rating.png) <br> ![Histplot Sin Nulos](images/no_null_histplot_rating.png) |
+| **Genre** | Valores nulos completados con la API o mantenidos como `NaN` si no se encontraron, luego se etiquetan como `"Unknown"` | ![alt text](images/barplot_rating_genre1.png) <br> ![alt text](reports/media_rating_per_genre1.png)|
+| **Revenue** | Imputación por mediana usando la relación con Budget (`ratio`) | ![Scatterplot Nulos](images/null_scatter_budget_revenue1.png) <br> ![Scatterplot Sin Nulos](images/no_null_scatter_budget_revenue1.png) |
+| **IMDB_Rating** | Imputación por mediana global (en datasets grandes se recomienda por género) | ![Histplot Nulos](images/histplot_rating1.png) <br> ![Histplot Sin Nulos](images/no_null_histplot_rating1.png) |
 
 ---
 
@@ -117,9 +117,9 @@ A continuación se muestran los principales insights obtenidos tras el análisis
 
 |  |  |
 | -------------- | --------------- |
-|![Relación Año-Budget](reports/relacion_año_budget.png)|![Relación Año-Revenue](reports/relacion_año_revenue.png)|
+|![Relación Año-Budget](reports/relacion_año_budget1.png)|![Relación Año-Revenue](reports/relacion_año_revenue1.png)|
 
-![alt text](reports/relacion_budget_revenue.png)
+![alt text](reports/relacion_budget_revenue1.png)
 
 ---
 
@@ -129,7 +129,7 @@ A continuación se muestran los principales insights obtenidos tras el análisis
 
 |  |  |
 | -------------- | --------------- |
-|![Top 5 Budget/Revenue](reports/top5_budget_revenue.png)|![Top 5 Revenue/Rating](reports/top5_revenue_rating.png)|
+|![Top 5 Budget/Revenue](reports/top5_budget_revenue1.png)|![Top 5 Revenue/Rating](reports/top5_revenue_rating1.png)|
 
 ---
 
@@ -139,9 +139,9 @@ A continuación se muestran los principales insights obtenidos tras el análisis
 
 |  |  |
 | -------------- | --------------- |
-|![Géneros con más películas](reports/film_per_genre.png)|![Top 3 ingresos por género](reports/top3_genre_revenue.png)|
+|![Géneros con más películas](reports/film_per_genre1.png)|![Top 3 ingresos por género](reports/top3_genre_revenue1.png)|
 
-![Géneros mejor valorados](reports/media_rating_per_genre.png)
+![Géneros mejor valorados](reports/media_rating_per_genre1.png)
 
 ---
 
@@ -154,10 +154,10 @@ A continuación se muestran los principales insights obtenidos tras el análisis
 
 |  |  |
 | -------------- | --------------- |
-|![Distribución de películas por año](reports/distribucion_per_year.png)|![Distribución alternativa por año](reports/distribucion_per_year2.png)|
+|![Distribución de películas por año](reports/distribucion_per_year1.png)|![Distribución alternativa por año](reports/distribucion_per_year2.png)|
 
-![Valoración media por años](reports/media_rating_per_year.png)  
-![Distribución de la valoración](reports/distribucion_rating.png)
+![Valoración media por años](reports/media_rating_per_year1.png)  
+![Distribución de la valoración](reports/distribucion_rating1.png)
 
 
 ## 7. Tableau (pendiente)
