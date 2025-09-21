@@ -34,6 +34,7 @@ El objetivo es limpiar, explorar y completar los datos faltantes para extraer in
 ---
 
 ## 3. Análisis Exploratorio (EDA)
+
 Se realizó un análisis preliminar con la función `carga_eda()`para entender la distribución de los datos y detectar posibles problemas.  
 - Revisiones realizadas:
   - `value_counts()` para variables categóricas
@@ -41,92 +42,124 @@ Se realizó un análisis preliminar con la función `carga_eda()`para entender l
   - Detección de valores nulos
   - Detección de duplicados
 
-
-### Visualizaciones exploratorias realizadas previa limpieza:
-- **Distribución de películas por año**: algunos valores estaban en formato string (por ejemplo, "Two Thousand"). Se decidió convertir a fecha y extraer solo el año para un análisis correcto.
-- **El año con mayor cantidad de películas es 2020** 
-
-![Distribución por año ](images/histplot_years.png)
-
-- **Relación Budget vs Revenue**: los valores de Budget estaban desordenados y en formatos mixtos (por ejemplo, "80M"). Se planificó convertirlos a valores numéricos y normalizar unidades (miles, millones) para analizar la relación.
-
-![Scatter Budget vs Revenue](./images/scatter_budget_revenue.png)
-
-- **Boxplots de Budget y Revenue**: se detectaron outliers en la columna Revenue, lo que indica valores atípicos que podrían influir en el análisis.
-
-![Boxplot Budget](./images/boxplot_budget.png)  
-![Boxplot Revenue](./images/boxplot_revenue.png)
-
-- **Distribución de IMDB_Rating**: se realizó un histograma para observar la frecuencia de las valoraciones y un scatterplot relacionando IMDB_Rating con Revenue. No se observó una relación clara entre la valoración y los ingresos.
-
-![Histplot Rating](images/histplot_ratings.png)
-![Scatterplot Rating/Revenue](images/scatter_rating_revenue.png)
 ---
+### Visualizaciones exploratorias realizadas previa limpieza:
+
+| Gráfico | Insight |
+|---------|---------|
+| ![Distribución por año](images/histplot_years.png) | Algunos valores estaban en formato string ("Two Thousand") y se convirtieron a años. El año con más películas es **2020**. |
+| ![Scatter Budget vs Revenue](images/scatter_budget_revenue.png) | Los valores de Budget estaban desordenados y en formatos mixtos. Se planificó normalizar unidades (miles, millones) para analizar la relación. |
+| ![Boxplot Budget](images/boxplot_budget.png) | Se detectan **outliers** en Budget que podrían influir en el análisis. |
+| ![Boxplot Revenue](images/boxplot_revenue.png) | Se detectan **outliers** en Revenue, indicando valores atípicos relevantes. |
+| ![Histplot Rating](images/histplot_ratings.png) | Se observa la distribución de IMDB_Rating. La mayoría de películas se concentran en valores medios, con pocas películas con valoraciones extremas. |
+| ![Scatterplot Rating/Revenue](images/scatter_rating_revenue.png) | No se observa una relación clara entre IMDB_Rating y Revenue; tener buena valoración no garantiza altos ingresos. |
+
 
 ## 4. Duplicados, Limpieza y Transformaciones
 
-### 4.1 Detección y eliminación de duplicados:  
-  Durante el EDA se identificaron dos filas duplicadas en el dataset.  
-  - Se realizó un `value_counts()` sobre la columna `Title` (que funciona como identificador único).  
-  - Se confirmaron los duplicados usando `df_movies.duplicated(keep=False).sort_values("Title")`.  
-  - Se eliminaron los duplicados aplicando `df_movies.drop_duplicates(inplace=True)`.  
-  - Finalmente, se verificó que los cambios se aplicaron correctamente comprobando la forma del DataFrame con `.shape`.
+### 4.1 Duplicados
+Durante el EDA se detectaron **2 filas duplicadas** en el dataset.
+
+- Se realizó un `value_counts()` sobre la columna `Title` (identificador único).  
+- Se confirmaron los duplicados usando `df_movies.duplicated(keep=False).sort_values("Title")`.  
+- Se eliminaron con `df_movies.drop_duplicates(inplace=True)`.  
+- Se verificó con `.shape` que los cambios se aplicaron correctamente.
+
+---
 
 ### 4.2 Year
-- Se convirtió string a número usando la función `text_to_num()` con la librería `word2number`.  
-- Se transformó a tipo datetime y se extrajo el año (`dt.year`).
+- Conversión de strings a números usando la función `text_to_num()` (librería `word2number`).  
+- Transformación a tipo datetime y extracción del año (`dt.year`) para análisis correcto.
 
 ### 4.3 Budget
-- Limpiado con la función `clean_budget()`.  
-- Detecta mediante la librería Regex `Mm` y `Kk` y convierte a int (millones y miles respectivamente).  
-- Valores no convertibles se devuelven como `NaN`.
+- Limpieza con la función `clean_budget()`.  
+- Detecta las letras `M/m` y `K/k` con Regex y convierte los valores a int (millones y miles).  
+- Valores no convertibles se transforman en `NaN`.
 
-### 4.5 OMdB API ("Genre", "IMDB_Rating", "Revenue")
+### 4.5 OMDb API
+Se identificaron valores nulos en las columnas: `IMDB_Rating`, `Revenue` y `Genre`.
 
-Durante el EDA se identificaron valores nulos en las columnas `IMDB_Rating`, `Revenue` y `Genre`.  
+- Se creó la función `fill_omdb()` que:  
+  1. Itera sobre filas con nulos.  
+  2. Consulta la API de OMDb por el título de la película.  
+  3. Rellena únicamente los datos vacíos que existen en la respuesta.  
+  4. Mantiene `NaN` si la API no devuelve información.  
+  5. Imprime un aviso si la película no se encuentra o si hay error de conexión.  
 
-  Para completar estos datos se utilizó la API de OMDb (requiere una `API_KEY`). Se creó la función `fill_omdb()` que realiza los siguientes pasos:  
-  1. Itera por las filas de las columnas con valores nulos.  
-  2. Cuando detecta un `NaN`, llama a la API buscando el título de la película.  
-  3. Si la API responde correctamente y encuentra la película:  
-      - Rellena únicamente los datos que están vacíos y existen en la respuesta de la API (no sobreescribe datos ya presentes).  
-      - Si la API no contiene información sobre ese campo, se mantiene `NaN`.  
-  4. Si no se encuentra la película, se imprime un aviso.  
-  5. Si ocurre algún error de conexión con la API, también se imprime un mensaje de error.  
+- Se revisó el porcentaje de nulos antes y después de aplicar la función.
 
-- Antes de aplicar la función, se revisó el porcentaje de nulos.  
-- Se aplicó la función `fill_omdb()` al DataFrame.  
-- Finalmente, se volvió a comprobar el porcentaje de nulos para verificar los cambios.
-
-**Aunque en un dataset con pocos datos, como es el caso, la cantidad de informacion recopilada no fue mucha, se realizó pensando en la escalabilidad del proyecto**
+**Nota:** En datasets pequeños, la cantidad de información obtenida es limitada, pero la función está pensada para escalabilidad.
 
 ---
 
 ## 5. Imputación final de Nulos
-- `Genre`: valores nulos completados con la API o mantenidos como `NaN` si no se encontraron. Se convirtieron después en "Unknown".
 
-- `Revenue`: imputación por mediana según la relación con Budget (ratio). 
-
-Se comparó la relación antes y después de la imputación de nulos para comprobar que no se distorsionaba.
-|  |  |
-| -------------- | --------------- |
-|![Scatterplot Null](images/null_scatter_budget_revenue.png)| ![Scatterplot No Null](images/null_scatter_budget_revenue.png)|
-
-- `IMDB_Rating`: imputación por mediana global (en caso de datasets más grandes se recomienda agrupando por género)
-
-|  |  |
-| -------------- | --------------- |
-|![Histplot Null](images/histplot_rating.png)| ![Histplot No Null](images/no_null_histplot_rating.png)|
-
+| Columna | Estrategia de imputación | Visualización |
+|---------|--------------------------|---------------|
+| **Genre** | Valores nulos completados con la API o mantenidos como `NaN` si no se encontraron, luego se etiquetan como `"Unknown"` | |
+| **Revenue** | Imputación por mediana usando la relación con Budget (`ratio`) | ![Scatterplot Nulos](images/null_scatter_budget_revenue.png) <br> ![Scatterplot Sin Nulos](images/no_null_scatter_budget_revenue.png) |
+| **IMDB_Rating** | Imputación por mediana global (en datasets grandes se recomienda por género) | ![Histplot Nulos](images/histplot_rating.png) <br> ![Histplot Sin Nulos](images/no_null_histplot_rating.png) |
 
 ---
 
-## 6. Visualizaciones finales (pendiente)
 
-## 7. Conclusiones (pendiente)
-- Existe una relación positiva entre Budget y Revenue.  
-- La limpieza y transformación de Year, Budget y Revenue permitió un análisis más confiable.  
-- La consulta a OMDb completó información faltante de IMDB_Rating y Genre, dejando el dataset listo para análisis futuros o visualizaciones más avanzadas.  
+## 6. Visualizaciones y Conclusiones finales
+
+A continuación se muestran los principales insights obtenidos tras el análisis exploratorio de los datos y las visualizaciones.
+
+⚠️ **Nota**: El dataset es reducido, por lo que los resultados deben interpretarse con cautela. Con un conjunto de datos más completo, los insights podrían variar significativamente.
+
+---
+
+### 6.1 Evolución de Budget y Revenue por año
+- **Tendencia decreciente** de presupuesto y recaudación entre 2000 y 2022.
+- Confirma la **relación positiva** identificada en la matriz de correlación.
+
+|  |  |
+| -------------- | --------------- |
+|![Relación Año-Budget](reports/relacion_año_budget.png)|![Relación Año-Revenue](reports/relacion_año_revenue.png)|
+
+---
+
+### 6.2 Top 5 películas
+- **60% de coincidencia** entre Top 5 de mayor presupuesto y Top 5 de mayor recaudación (correlación 0.58).  
+- **No existe relación** clara entre valoración IMDb y recaudación.
+
+|  |  |
+| -------------- | --------------- |
+|![Top 5 Budget/Revenue](reports/top5_budget_revenue.png)|![Top 5 Revenue/Rating](reports/top5_revenue_rating.png)|
+
+---
+
+### 6.3 Géneros
+- **Drama, Comedy y Thriller** son los géneros con más películas y mayor recaudación absoluta.  
+- **Documentary, Action y Comedy** presentan las valoraciones promedio más altas.
+
+|  |  |
+| -------------- | --------------- |
+|![Géneros con más películas](reports/film_per_genre.png)|![Top 3 ingresos por género](reports/top3_genre_revenue.png)|
+
+![Géneros mejor valorados](reports/media_rating_per_genre.png)
+
+---
+
+### 6.4 IMDb Rating
+- **Año con más películas**: 2020.  
+- **Mejor valoración media**: 2003 (8.2), seguida de 2016 y 2007 (7.2).  
+- **Peor valoración media**: 2019 (3.9).  
+- **Valoración media global**: 5.77.  
+- La mayoría de películas tienen valoraciones medias (4.8 a 5.8), pocas tienen valoraciones extremas.
+
+|  |  |
+| -------------- | --------------- |
+|![Distribución de películas por año](reports/distribucion_per_year.png)|![Distribución alternativa por año](reports/distribucion_per_year2.png)|
+
+![Valoración media por años](reports/media_rating_per_year.png)  
+![Distribución de la valoración](reports/distribucion_rating.png)
+
+
+## 7. Tableau (pendiente)
+ 
 
 ---
 
