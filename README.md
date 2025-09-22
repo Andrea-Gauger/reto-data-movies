@@ -50,7 +50,6 @@ Se realizó un análisis preliminar con la función `carga_eda()`para entender l
 | ![Distribución por año](images/histplot_years1.png) | Algunos valores estaban en formato string ("Two Thousand") y se convirtieron a años. El año con más películas es **2020**. |
 | ![Scatter Budget vs Revenue](images/scatter_budget_revenue1.png) | Los valores de Budget estaban desordenados y en formatos mixtos. Se planificó normalizar unidades (miles, millones) para analizar la relación. |
 | ![Boxplot Budget](images/boxplot_budget1.png) | Se detectan valores en formato mixto ("80M") que hay que limpiar. |
-| ![Boxplot Revenue](images/boxplot_revenue1.png) | Se detectan **outliers** en Revenue, indicando valores atípicos relevantes. |
 | ![Histplot Rating](images/histplot_ratings1.png) | Se observa la distribución de IMDB_Rating. La mayoría de películas se concentran en valores medios, con pocas películas con valoraciones extremas. |
 | ![Scatterplot Rating/Revenue](images/scatter_rating_revenue1.png) | No se observa una relación clara entre IMDB_Rating y Revenue; se volverá a comprobar una vez los datos estén limpios. |
 
@@ -160,17 +159,26 @@ A continuación se muestran los principales insights obtenidos tras el análisis
 ![Distribución de la valoración](reports/distribucion_rating1.png)
 
 
-## 7. Tableau (pendiente)
- 
+## 7. Next Steps
+- Identificar las películas con su código IMDb para facilitar referencias y consultas externas.
+- Ampliar el análisis con un dataset más grande para validar los insights.
+- Crear un dashboard en Tableau que resuma los hallazgos principales.
 
 ---
 
 ## 8. Cómo ejecutar el proyecto
 1. Clonar el repositorio  
 2. Instalar dependencias: `pip install -r requirements.txt`
-3. Ejecutar notebooks en el orden:
+3. Configurar API Key:
+- Es necesario obtener una API Key de OMDb (gratuita para uso básico).
+- Puedes solicitarla en http://www.omdbapi.com/apikey.aspx
+- Una vez obtenida, introduce tu API Key en la variable API_KEY dentro del código antes de ejecutar los notebooks (`02_limpieza_nulos.ipynb`).
+4. Ejecutar notebooks en el orden:
    - `01_eda.ipynb`  
    - `02_limpieza_y_nulos.ipynb`  
    - `03_visualizaciones_y_conclusiones.ipynb`
 
-> Las imágenes generadas se guardan en la carpeta `./images/`.
+> Durante la ejecución, las imágenes generadas se guardan automáticamente en las carpetas:
+- `./images/` → visualizaciones exploratorias y gráficas del EDA.
+- `./reports/` → visualizaciones finales utilizadas en las conclusiones.
+
