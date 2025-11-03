@@ -1,3 +1,196 @@
+# Adopta Un Junior Challenge: Movies Dataset Analysis
+
+Exploratory analysis and visualization of a movie dataset as part of the **Adopta un Junior** data challenge.  
+This project gave me the opportunity to be selected and become part of the **Adopta un Junior** initiative.
+
+## Initial Setup
+
+The following libraries were imported for data manipulation (`pandas`, `numpy`, `re`, `requests`), string-to-number conversion (`word2number`), and visualization (`matplotlib`, `seaborn`).
+
+Configuration steps:
+- Pandas adjusted to show all columns and disable scientific notation (optional).  
+- Seaborn and Matplotlib configured for a consistent visual style, color palette, and label sizes.  
+- Unnecessary warnings were ignored to keep the Notebook clean.
+
+This setup ensures a consistent and professional environment for data exploration, cleaning, and visualization.
+
+---
+
+## 1. Introduction
+This project analyzes a movie dataset containing information such as year, genre, budget, revenue, and IMDB rating.  
+The goal was to clean, explore, and fill missing data to extract insights and prepare a reliable dataset for further analysis — while keeping in mind potential scalability, as this dataset is quite small.
+
+---
+
+## 2. Dataset
+- **Source**: CSV file provided by the "Adopta un Junior" challenge.  
+- **Main columns**:
+  - `Title`: Movie title  
+  - `Genre`: Genre  
+  - `Year`: Release year  
+  - `Budget`: Production budget  
+  - `Revenue`: Box office revenue  
+  - `IMDB_Rating`: IMDB rating  
+
+> Size: 22 rows  
+
+---
+
+## 3. Exploratory Data Analysis (EDA)
+
+A preliminary analysis was performed using the `carga_eda()` function to understand data distribution and detect possible issues.  
+Checks performed:
+- `value_counts()` for categorical variables  
+- `describe()` for numerical variables  
+- Null value detection  
+- Duplicate detection  
+
+### Pre-cleaning exploratory visualizations:
+
+| Chart | Insight |
+|--------|----------|
+| ![Year distribution](images/histplot_years1.png) | Some values were strings ("Two Thousand") and converted to numeric years. The year with the most movies is **2020**. |
+| ![Scatter Budget vs Revenue](images/scatter_budget_revenue1.png) | Budget values were inconsistent and mixed-format. Planned normalization (thousands, millions) for proper analysis. |
+| ![Boxplot Budget](images/boxplot_budget1.png) | Mixed-format values ("80M") were detected and required cleaning. |
+| ![Histplot Rating](images/histplot_ratings1.png) | Most movies have mid-range IMDB ratings, with few extreme values. |
+| ![Scatter Rating vs Revenue](images/scatter_rating_revenue1.png) | No clear correlation between IMDB_Rating and Revenue; to be rechecked post-cleaning. |
+
+---
+
+## 4. Duplicates, Cleaning, and Transformations
+
+### 4.1 Duplicates
+Two duplicate rows were detected during the EDA.
+
+- `value_counts()` was run on the `Title` column (unique identifier).  
+- Duplicates confirmed using `df_movies.duplicated(keep=False).sort_values("Title")`.  
+- Removed via `df_movies.drop_duplicates(inplace=True)`.  
+- Verified with `.shape` to ensure proper application.
+
+---
+
+### 4.2 Year
+- Converted strings to numbers using the `text_to_num()` function (`word2number` library).  
+- Converted to datetime and extracted the year (`dt.year`) for accurate temporal analysis.
+
+### 4.3 Budget
+- Cleaned using `clean_budget()` function.  
+- Regex used to detect letters `M/m` and `K/k` and convert to integers (millions and thousands).  
+- Unconvertible values replaced with `NaN`.
+
+### 4.5 OMDb API
+Missing values were identified in the columns `IMDB_Rating`, `Revenue`, and `Genre`.
+
+- Created a function `fill_omdb()` that:
+  1. Iterates through rows with missing values.  
+  2. Queries the OMDb API using the movie title.  
+  3. Fills only the empty fields found in the API response.  
+  4. Keeps `NaN` if the movie is not found.  
+  5. Prints a message in case of errors or missing movies.  
+
+- The percentage of null values was reviewed before and after applying the function.
+
+**Note:** For small datasets, retrieved information is limited, but the function is designed for scalability.
+
+---
+
+## 5. Final Missing Value Imputation
+
+| Column | Imputation Strategy | Visualization |
+|---------|--------------------|---------------|
+| **Genre** | Filled with API data or labeled as `"Unknown"` if not found | ![alt text](images/barplot_rating_genre1.png) <br> ![alt text](reports/media_rating_per_genre1.png) |
+| **Revenue** | Imputed using the median based on the Budget/Revenue ratio | ![Null Scatterplot](images/null_scatter_budget_revenue1.png) <br> ![Non-null Scatterplot](images/no_null_scatter_budget_revenue1.png) |
+| **IMDB_Rating** | Imputed with the global median (for larger datasets, imputation by genre is recommended) | ![Null Histplot](images/histplot_rating1.png) <br> ![Non-null Histplot](images/no_null_histplot_rating1.png) |
+
+---
+
+## 6. Final Visualizations and Conclusions
+
+Below are the main insights obtained after data cleaning and visualization.
+
+⚠️ **Note:** The dataset is small, so results should be interpreted cautiously. Larger datasets could yield different insights.
+
+---
+
+### 6.1 Budget and Revenue Over Time
+- **Downward trend** in both budget and revenue between 2000 and 2022.  
+- Confirms the **positive correlation** identified in the correlation matrix.
+
+|  |  |
+|--------------|---------------|
+|![Year-Budget Relationship](reports/relacion_año_budget1.png)|![Year-Revenue Relationship](reports/relacion_año_revenue1.png)|
+
+![Budget-Revenue Relationship](reports/relacion_budget_revenue1.png)
+
+---
+
+### 6.2 Top 5 Movies
+- **60% overlap** between the Top 5 highest-budget and highest-revenue movies (correlation 0.58).  
+- **No clear relationship** between IMDB rating and revenue.
+
+|  |  |
+|--------------|---------------|
+|![Top 5 Budget/Revenue](reports/top5_budget_revenue1.png)|![Top 5 Revenue/Rating](reports/top5_revenue_rating1.png)|
+
+---
+
+### 6.3 Genres
+- **Drama, Comedy, and Thriller** have the most movies and the highest absolute revenue.  
+- **Documentary, Action, and Comedy** show the highest average ratings.
+
+|  |  |
+|--------------|---------------|
+|![Movies per Genre](reports/film_per_genre1.png)|![Top 3 Revenue by Genre](reports/top3_genre_revenue1.png)|
+
+![Top Rated Genres](reports/media_rating_per_genre1.png)
+
+---
+
+### 6.4 IMDb Rating
+- **Most active year:** 2020.  
+- **Highest average rating:** 2003 (8.2), followed by 2016 and 2007 (7.2).  
+- **Lowest average rating:** 2019 (3.9).  
+- **Global average rating:** 5.77.  
+- Most movies are in the mid-range ratings (4.8–5.8), with few extremes.
+
+|  |  |
+|--------------|---------------|
+|![Movies per Year](reports/distribucion_per_year1.png)|![Alternative Year Distribution](reports/distribucion_per_year2.png)|
+
+![Average Rating per Year](reports/media_rating_per_year1.png)  
+![Rating Distribution](reports/distribucion_rating1.png)
+
+---
+
+## 7. Next Steps
+- Identify movies by their IMDb code for better referencing.  
+- Expand the analysis using a larger dataset to validate insights.  
+- Build a **Tableau dashboard** summarizing key findings.
+
+---
+
+## 8. How to Run the Project
+1. Clone the repository  
+2. Install dependencies: `pip install -r requirements.txt`  
+3. Set up the API Key:
+   - Obtain an OMDb API Key (free for basic use).  
+   - Request one at http://www.omdbapi.com/apikey.aspx  
+   - Insert your key into the `API_KEY` variable in the code before running the notebooks (`02_limpieza_nulos.ipynb`).  
+4. Run notebooks in this order:
+   - `01_eda.ipynb`  
+   - `02_limpieza_y_nulos.ipynb`  
+   - `03_visualizaciones_y_conclusiones.ipynb`  
+
+> During execution, generated images are saved automatically in:
+- `./images/` → exploratory and EDA plots  
+- `./reports/` → final visualizations used in conclusions
+
+
+
+
+---
+
+
 # Reto Adopta Un Junior: Análisis Movies Dataset
 Análisis exploratorio y visualización de un dataset de películas como parte del reto de datos de Adopta un Junior.
 
